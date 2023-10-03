@@ -8,41 +8,74 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  static final listaPessoas = PessoaRepository.listaPessoas;
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      home: MyAppCounter(),
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          leading: Icon(
-            Icons.menu,
-            size: 30,
+    );
+  }
+}
+
+class MyAppCounter extends StatefulWidget {
+  const MyAppCounter({super.key});
+
+  @override
+  State<MyAppCounter> createState() => _MyAppCounterState();
+}
+
+class _MyAppCounterState extends State<MyAppCounter> {
+  int counter = 0;
+  final fraseController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Meu contador"),
+      ),
+      body: Column(
+        children: [
+          TextField(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: "Digite algo",
+            ),
+            controller: fraseController,
           ),
-          title: const Center(
-            child: Text("Meu primeiro app"),
+          Text(
+            counter.toString(),
+            style: TextStyle(
+              fontSize: 48,
+            ),
           ),
-        ),
-        body: ListView.separated(
-          itemBuilder: (BuildContext context, int id) {
-            return Card(
-              child: ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: AssetImage(listaPessoas[id].foto),
-                ),
-                title: Text(listaPessoas[id].nome),
-                trailing: Text(listaPessoas[id].idade.toString()),
-              ),
-            );
-          },
-          separatorBuilder: (_, __) {
-            return Divider(
-              thickness: 1,
-            );
-          },
-          itemCount: listaPessoas.length,
-        ),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                counter++;
+              });
+            },
+            child: Icon(Icons.plus_one),
+          ),
+          Text(
+            fraseController.text,
+            style: TextStyle(fontSize: 48),
+          ),
+          ElevatedButton(
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("Alerta"),
+                        content: Text(
+                          fraseController.text,
+                        ),
+                      );
+                    });
+              },
+              child: Text('Ver texto'))
+        ],
       ),
     );
   }
